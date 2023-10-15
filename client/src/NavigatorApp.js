@@ -10,28 +10,20 @@ import {AUTH} from './context/ContextApi';
 const Stack = createNativeStackNavigator();
 
 const NavigatorApp = () => {
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
-  const {setData} = useContext(AUTH);
-  // Handle user state changes
+  const {data, setData} = useContext(AUTH);
   function onAuthStateChanged(user) {
-    setUser(user);
-    // setData(user);
-    if (initializing) setInitializing(false);
+    setData(user);
   }
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber;
-    // unsubscribe on unmount
   }, []);
-  useEffect(() => {
-    setData(user);
-  }, [user]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        {user != null ? (
+        {data != null ? (
           <Stack.Screen name="home" component={HomeScreen} />
         ) : (
           <>
